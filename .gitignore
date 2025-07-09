@@ -1,0 +1,29 @@
+# DBeaver 관련 설정
+.dbeaver/
+
+# Eclipse 및 워크스페이스 설정 파일
+.settings/
+.project
+.metadata/
+
+# OS 임시/캐시 파일
+Thumbs.db
+.DS_Store
+
+# 로그/임시/백업 파일
+*.log
+*.tmp
+*.bak
+*.swp
+*.~*
+*~
+
+# 기타 숨김 폴더
+General/
+
+# 환경변수 파일 (선택적)
+*.env
+
+# JetBrains/IntelliJ 계열 IDE (혹시 쓰는 경우)
+.idea/
+*.iml
