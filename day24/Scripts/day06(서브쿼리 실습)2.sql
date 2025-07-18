@@ -1,0 +1,100 @@
+-- 3번 : 서브쿼리 실습 
+-- 단일행, 다중행, 연관, 비연관 => 어떤 서브쿼리 유형인지 
+-- SELECT, FROM, WHERE 서브쿼리 => 서브쿼리를 어디에 쓸지 
+-- 연산자, 집계함수 => 어떤 연산자를 쓸지 
+-- 쿼리를 메인쿼리와 서브쿼리로 나눠서 작성 
+
+-- 1. 전체 직원 중 급여가 가장 높은 직원의 이름과 급여 조회 
+-- 단일행 / 비연관 
+-- WHERE 
+-- MAX(), = 
+
+SELECT MAX(SALARY) FROM EMPLOYEES; 
+
+SELECT FIRST_NAME, SALARY 
+FROM EMPLOYEES; --107행(메인쿼리)
+
+SELECT FIRST_NAME, SALARY 
+FROM EMPLOYEES 
+WHERE SALARY = (SELECT MAX(SALARY) FROM EMPLOYEES); 
+
+-- 2. 전체 평균급여보다 많이 받는 직원의 이름과 급여 조회
+-- 서브쿼리 유형 : 단일행 / 비연관
+-- 연산자 : >
+-- 서브쿼리 위치 : WHERE
+
+--평균급여 조회 
+SELECT AVG(SALARY) 
+FROM EMPLOYEES; --1개 행 (서브쿼리 )
+
+-- 전체 직원 조회(이름, 급여) 
+SELECT FIRST_NAME, SALARY 
+FROM EMPLOYEES; --107행(메인쿼리) 
+
+SELECT FIRST_NAME 이름, SALARY 급여
+FROM EMPLOYEES 
+WHERE SALARY > (SELECT AVG(SALARY) FROM EMPLOYEES);
+
+-- 3. IT 부서에 소속된 직원의 이름과 부서ID, 급여 조회
+-- 서브쿼리 유형 : 다중행 / 비연관
+-- 연산자 : IN
+-- 서브쿼리 위치 : WHERE
+
+--서브쿼리 : IT = DEPARTMENT_NAME인 직원 조회 
+SELECT DEPARTMENT_ID, DEPARTMENT_NAME 
+FROM DEPARTMENTS 
+WHERE DEPARTMENT_NAME = 'IT'; --1행(60번) 
+
+--메인쿼리 
+SELECT FIRST_NAME, SALARY, DEPARTMENT_ID 
+FROM EMPLOYEES E; 
+
+--두개의 테이블이 다르므로 공통되는 컬럼을 찾아서 비교 
+SELECT FIRST_NAME, SALARY, DEPARTMENT_ID 
+FROM EMPLOYEES 
+WHERE DEPARTMENT_ID IN (SELECT DEPARTMENT_ID FROM DEPARTMENTS WHERE DEPARTMENT_NAME = 'IT');
+
+--4. ST_CLERK 직무를 가진 직원의 급여 평균 조회 
+--서브쿼리 유형 : 단일행 / 비연관 
+--연산자 = 
+--서브쿼리 위치 : 단독실행 
+SELECT AVG(SALARY) 
+FROM EMPLOYEES 
+WHERE JOB_ID = 'ST_CLERK'; 
+
+-- 5. 부서별 최대 급여를 받는 직원들의 이름과 급여, 부서ID 조회
+-- 서브쿼리 유형 : 다중행, 연관
+-- 연산자 : =, MAX()
+-- 서브쿼리 위치 : WHERE
+
+--부서별 최대 급여 
+SELECT DEPARTMENT_ID, MAX(SALARY) 
+FROM EMPLOYEES 
+GROUP BY DEPARTMENT_ID; 
+
+SELECT FIRST_NAME, DEPARTMENT_ID, SALARY 
+FROM EMPLOYEES E 
+WHERE SALARY = (SELECT MAX(SALARY) FROM EMPLOYEES WHERE E.DEPARTMENT_ID = DEPARTMENT_ID);
+
+SELECT EMPLOYEE_ID, FIRST_NAME, DEPARTMENT_ID 
+FROM EMPLOYEES 
+WHERE DEPARTMENT_ID IS NULL;   
+
+SELECT E.EMPLOYEE_ID, E.FIRST_NAME, E.DEPARTMENT_ID  
+FROM EMPLOYEES E 
+WEHRE DEPARTMENT_ID NOT IN(SELECT D.DEPARTMENT_ID) FROM DEPARTMENTS D) 
+	OR DEPARTMENT_ID IS NULL; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
